@@ -1,3 +1,6 @@
+# How is it hosted?
+It runs from https://www.pythonanywhere.com - python script + the MySQL DB. It does a great job, allows for decent CPU & the possibility to have scheduled task is valuable in this case.
+
 # Twitter_StravaSegment_Scanner
 A twitter bot that scans for change in Strava's segments' leaderboards. 
 You can add segments for scanning by tweeting "@StravaBrussels add [segmentid]"
