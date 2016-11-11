@@ -7,4 +7,5 @@ You can add segments for scanning by tweeting "@StravaBrussels add [segmentid]"
 # How to find a segment's ID
 Go to the segment page on strava and find it in the URL
 
+![id](http://i.imgur.com/KhdLwM0.png)
 ![id](http://i.imgur.com/67HEvol.png)
