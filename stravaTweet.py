@@ -23,10 +23,6 @@ def shorten_url(longUrl):
     shortUrl = resp["data"]["url"]
     return(shortUrl)
 
-def pick(liste):
-    b = len(liste)
-    return (liste[random.randint(0, b-1)])
-
 # Lists creation - Contain varied elements of tweets
 nochange = ["No new leader today -_- #gogetit #strive #stravabrussels #stravarun", "No change today, are people getting slow? #strive #stravabrussels #stravarun", "Leaderboards are untouched and set to see another day #strive #stravabrussels #stravarun", "No segment record was beaten #MakeStravaFastAgain"]
 middle = ["got himself a segment record", "gets on top of the segment leaderboard", "just beat a segment record"]
@@ -82,7 +78,7 @@ for change in changes:
 
 #Actions depends whether segment leaders have changed or not
 if len(changes) == 0:
-    api.update_status(pick(nochange))
+    api.update_status(random.choice(nochange))
 else:
     api.update_status("We have "+str(len(changes))+" new leader(s) today! #strive #gameon")
     for change in changes:
@@ -90,7 +86,7 @@ else:
         segmentShortUrl = shorten_url("https://www.strava.com/segments/"+str(change[0]))
 
         #Generate a status with the different elements and tweet it
-        status = firstName + " " + pick(middle)  + " " + segmentShortUrl + " " + pick(hashtags)
+        status = firstName + " " + random.choice(middle)  + " " + segmentShortUrl + " " + random.choice(hashtags)
         api.update_status(status)
 
 #Get id and time of last EOD tweet
@@ -134,23 +130,3 @@ else:
 
 api.update_status("Request scanning of segments by tweeting \"@StravaBrussels add [segmentid]\"")
 api.update_status("#StravaBotOutForToday last scan at "+str(time)+" UTC")
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
