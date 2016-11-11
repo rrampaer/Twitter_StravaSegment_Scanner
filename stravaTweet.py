@@ -37,7 +37,6 @@ api = tweepy.API(auth)
 conn = MySQLdb.connect(databaseHostAdress, username  ,pwd, databaseName)
 c = conn.cursor()
 
-
 #Get last version of (segment,leader) pairs in DB
 c.execute("SELECT * FROM duo")
 rows = c.fetchall()
@@ -75,7 +74,6 @@ for change in changes:
     c.execute("UPDATE duo SET leader=%s WHERE segment=%s",
                (change[1],change[0]))
 
-
 #Actions depends whether segment leaders have changed or not
 if len(changes) == 0:
     api.update_status(random.choice(nochange))
@@ -99,7 +97,6 @@ try:
             break
 except Exception as err:
     print(err)
-
 
 #Add segments requested by users via tweet - "Tweet" = "@stravabrussels add [segmentid]"
 requestedSegments =  api.search("%40stravabrussels")
