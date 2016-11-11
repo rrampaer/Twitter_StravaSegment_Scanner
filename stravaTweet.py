@@ -3,7 +3,7 @@ import requests
 import tweepy
 import random
 
-#Access codes and tokens - Inser your own
+#Access codes and tokens - Insert your own
 tokenBitly = Add yours
 stravaAuth = Add yours
 databaseHostAdress = Add yours
@@ -15,7 +15,7 @@ CONSUMER_SECRET = Add yours
 ACCESS_KEY = Add yours
 ACCESS_SECRET = Add yours
 
-#Functions definition - Names are self-explainatory
+#Function to shorten URL
 def shorten_url(longUrl):
     url="https://api-ssl.bitly.com/v3/shorten?access_token="+tokenBitly+"&longUrl="+longUrl
     b = requests.get(url)
@@ -23,7 +23,7 @@ def shorten_url(longUrl):
     shortUrl = resp["data"]["url"]
     return(shortUrl)
 
-# Lists creation - Contain varied elements of tweets
+# Lists creation - Contain elements of tweets
 nochange = ["No new leader today -_- #gogetit #strive #stravabrussels #stravarun", "No change today, are people getting slow? #strive #stravabrussels #stravarun", "Leaderboards are untouched and set to see another day #strive #stravabrussels #stravarun", "No segment record was beaten #MakeStravaFastAgain"]
 middle = ["got himself a segment record", "gets on top of the segment leaderboard", "just beat a segment record"]
 hashtags = ["#easyrun #strive #stravarun #stravabrussels", "#fastdontlie #strive #stravarun #stravabrussels", "#fastlife #strive #stravarun #stravabrussels", "#numeroUno #strive #stravarun #stravabrussels", "#beatyesterday #strive #stravarun #stravabrussels"]
