@@ -21,9 +21,18 @@ ACCESS_KEY = Add yours
 ACCESS_SECRET = Add yours
 
 # Lists creation - Contain elements of tweets
-nochange = ["No new leader today -_- #gogetit #strive #stravabrussels #stravarun", "No change today, are people getting slow? #strive #stravabrussels #stravarun", "Leaderboards are untouched and set to see another day #strive #stravabrussels #stravarun", "No segment record was beaten #MakeStravaFastAgain"]
-middle = ["got himself a segment record", "gets on top of the segment leaderboard", "just beat a segment record"]
-hashtags = ["#easyrun #strive #stravarun #stravabrussels", "#fastdontlie #strive #stravarun #stravabrussels", "#fastlife #strive #stravarun #stravabrussels", "#numeroUno #strive #stravarun #stravabrussels", "#beatyesterday #strive #stravarun #stravabrussels"]
+nochange = ["No new leader today -_- #gogetit #strive #stravabrussels #stravarun",
+            "No change today, are people getting slow? #strive #stravabrussels #stravarun",
+            "Leaderboards are untouched and set to see another day #strive #stravabrussels #stravarun",
+            "No segment record was beaten #MakeStravaFastAgain"]
+middle = ["got himself a segment record",
+          "gets on top of the segment leaderboard",
+          "just beat a segment record"]
+hashtags = ["#easyrun #strive #stravarun #stravabrussels",
+            "#fastdontlie #strive #stravarun #stravabrussels",
+            "#fastlife #strive #stravarun #stravabrussels",
+            "#numeroUno #strive #stravarun #stravabrussels",
+            "#beatyesterday #strive #stravarun #stravabrussels"]
 
 #URL shortening is crucial given twitter 140 characters restriction
 def shorten_url(longUrl):
@@ -59,7 +68,7 @@ def get_changed_leaders(rows):
             print(update)
             raise SystemExit()
             
-        elif update["entries"] []:
+        elif not update["entries"]:
             print("Can't find leaderboard for segment "+str(eachRow[0]))
 
         elif update["entries"][0]["athlete_id"] == eachRow[1]:
@@ -80,7 +89,7 @@ def update_database(c,changes):
         c.executemany(stmt, changes)
 
 def tweet_changes(changes, api):
-    if changes []:
+    if not changes:
         api.update_status(random.choice(nochange))
     else:
         api.update_status("We have "+str(len(changes))+" new leader(s) today! #strive #gameon")
@@ -97,20 +106,20 @@ def get_last_tweet(api):
     try:
         for entry in id_yesterday:
             if entry.author.screen.name = "StravaBrussels":
-                _time = entry.created_at
+                time_ = entry.created_at
                 break        
     except AttributeError as err:
         print(err)
-    return (_time)
+    return (time_)
 
-def add_requested_segments(api, rows, _time):
+def add_requested_segments(api, rows, time_):
     requestedSegments =  api.search("%40stravabrussels")
     if len(rows) + len(requestedSegments)<600:
         for tweet in requestedSegments:
-            if tweet.text.split(' ')[1] == "add" and tweet.created_at > _time:
+            if tweet.text.split(' ')[1] == "add" and tweet.created_at > time_:
                 seg_to_check = tweet.text.split(' ')[2]
             #Twitter sometimes add a random space after the @user
-            elif tweet.text.split(' ')[2] == "add" and tweet.created_at > _time :
+            elif tweet.text.split(' ')[2] == "add" and tweet.created_at > time_ :
                 seg_to_check = tweet.text.split(' ')[3]
             else:
                 pass
@@ -130,9 +139,9 @@ def add_requested_segments(api, rows, _time):
     else:
         api.update_status("Could not add more segment because limit of 600 has been reached")
 
-def close_the_day(api, _time):
+def close_the_day(api, time_):
     api.update_status("Request scanning of segments by tweeting \"@StravaBrussels add [segmentid]\"")
-    api.update_status("#StravaBotOutForToday last scan at "+str(_time)+" UTC")
+    api.update_status("#StravaBotOutForToday last scan at "+str(time_)+" UTC")
 
 
 def main() :
@@ -142,9 +151,9 @@ def main() :
     changes = get_changed_leaders(rows)
     update_database(c,changes)
     tweet_changes(changes, api)
-    _time = get_last_tweet(api)
-    add_requested_segments(api, rows, _time)
-    close_the_day(api, _time)
+    lasTime = get_last_tweet(api)
+    add_requested_segments(api, rows, lastTime)
+    close_the_day(api, lastTime)
       
 if __name__ == "__main__":
     main()
