@@ -55,23 +55,24 @@ def get_changed_leaders(rows):
         r = requests.get(url, headers=header)
         update = r.json()
         #Compare them with last DB version, capture changes
-        if "entries" in update.keys():
-            if len(update["entries"]) == 0:
-                print("Can't find leaderboard for segment "+str(eachRow[0]))
-            elif len(update["entries"]) > 0 :
-                if update["entries"][0]["athlete_id"] == eachRow[1]:
-                    pass
-                else:
-                    change = []
-                    change.append(eachRow[0])
-                    change.append(update["entries"][0]["athlete_name"])
-                    change.append(update["entries"][0]["athlete_id"])
-                    change.append(update["entries"][0]["elapsed_time"])
-                    change.append(update["entries"][0]["distance"])
-                    changes.append(change)
-        else:
+        if "entries" not in update.keys():
             print(update)
             raise SystemExit()
+            
+        elif update["entries"] []:
+            print("Can't find leaderboard for segment "+str(eachRow[0]))
+
+        elif update["entries"][0]["athlete_id"] == eachRow[1]:
+            pass
+
+        else:
+            change = []
+            change.append(eachRow[0])
+            change.append(update["entries"][0]["athlete_name"])
+            change.append(update["entries"][0]["athlete_id"])
+            change.append(update["entries"][0]["elapsed_time"])
+            change.append(update["entries"][0]["distance"])
+            changes.append(change)
     return(changes)
 
 def update_database(c,changes):
@@ -80,7 +81,7 @@ def update_database(c,changes):
                    (change[1],change[0]))
 
 def tweet_changes(changes, api):
-    if len(changes) == 0:
+    if changes []:
         api.update_status(random.choice(nochange))
     else:
         api.update_status("We have "+str(len(changes))+" new leader(s) today! #strive #gameon")
@@ -95,22 +96,22 @@ def tweet_changes(changes, api):
 def get_last_tweet(api):
     id_yesterday =  api.search("StravaBotOutForToday")
     try:
-        for i in range(len(id_yesterday)):
-            if id_yesterday[i].author.screen_name == "StravaBrussels":
-                time = id_yesterday[i].created_at
-                break
-    except Exception as err:
+        for entry in id_yesterday:
+            if entry.author.screen.name = "StravaBrussels":
+                _time = entry.created_at
+                break        
+    except AttributeError as err:
         print(err)
-    return (time)
+    return (_time)
 
-def add_requested_segments(api, rows, time):
+def add_requested_segments(api, rows, _time):
     requestedSegments =  api.search("%40stravabrussels")
     if len(rows) + len(requestedSegments)<600:
         for tweet in requestedSegments:
-            if tweet.text.split(' ')[1] == "add" and tweet.created_at > time:
+            if tweet.text.split(' ')[1] == "add" and tweet.created_at > _time:
                 seg_to_check = tweet.text.split(' ')[2]
             #Twitter sometimes add a random space after the @user
-            elif tweet.text.split(' ')[2] == "add" and tweet.created_at > time :
+            elif tweet.text.split(' ')[2] == "add" and tweet.created_at > _time :
                 seg_to_check = tweet.text.split(' ')[3]
             else:
                 pass
@@ -130,9 +131,9 @@ def add_requested_segments(api, rows, time):
     else:
         api.update_status("Could not add more segment because limit of 600 has been reached")
 
-def close_the_day(api, time):
+def close_the_day(api, _time):
     api.update_status("Request scanning of segments by tweeting \"@StravaBrussels add [segmentid]\"")
-    api.update_status("#StravaBotOutForToday last scan at "+str(time)+" UTC")
+    api.update_status("#StravaBotOutForToday last scan at "+str(_time)+" UTC")
 
 
 def main() :
@@ -142,9 +143,9 @@ def main() :
     changes = get_changed_leaders(rows)
     update_database(c,changes)
     tweet_changes(changes, api)
-    time = get_last_tweet(api)
-    add_requested_segments(api, rows, time)
-    close_the_day(api, time)
+    _time = get_last_tweet(api)
+    add_requested_segments(api, rows, _time)
+    close_the_day(api, _time)
       
 if __name__ == "__main__":
     main()
