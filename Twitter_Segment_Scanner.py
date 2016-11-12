@@ -76,9 +76,8 @@ def get_changed_leaders(rows):
     return(changes)
 
 def update_database(c,changes):
-    for change in changes:
-        c.execute("UPDATE duo SET leader=%s WHERE segment=%s",
-                   (change[1],change[0]))
+        stmt = "UPDATE duo SET leader=%s WHERE segment=%s"
+        c.executemany(stmt, changes)
 
 def tweet_changes(changes, api):
     if changes []:
