@@ -1,3 +1,8 @@
+# coding: utf8
+# This program (a scheduled task run from pythonanywhere.com ) scans for Strava (a popular running/cycling app) segment leaderboards changes.
+# Everyday, it checks whether segment records have been broken, and tweet it if such was the case
+# The "bot" also allows people to add segments to the "to-be-scanned" list by tweeting it the following:"@stravabrussels add [segmentid]"
+
 import MySQLdb
 import requests
 import tweepy
