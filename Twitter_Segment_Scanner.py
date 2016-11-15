@@ -151,15 +151,10 @@ def main() :
     changes = get_changed_leaders(rows)
     update_database(c,changes)
     tweet_changes(changes, api)
-    lasTime = get_last_tweet(api)
+    lastTime = get_last_tweet(api)
     add_requested_segments(api, rows, lastTime)
     close_the_day(api, lastTime)
+    conn.commit()
       
 if __name__ == "__main__":
     main()
-    
-    
-    
-    
-    
-    
